@@ -1,0 +1,205 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import InputSentence from '../../components/InputSentence';
+import ExecutionExercise from '../../components/ExecutionExercise';
+import _translator from '../../../helpers/Translator';
+
+import {
+  initializeNewExercise,
+  updateNewExerciseState,
+  changeNewInputSentence,
+  saveFreeExercise,
+  initNewExerciseState,
+  getAutomaticSolution
+} from '../../../actions/ExerciseActions';
+
+class FreeExsercise extends Component {
+  constructor(props) {
+    super(props);
+    props.initializeNewExercise();
+    this.privateExerciseDev = React.createRef();
+  }
+
+  componentWillUnmount() {
+    this.props.initializeNewExercise();
+  }
+
+  /**
+   * split the sentence
+   *
+   * @param sentence the sentence to analyze
+   */
+  prepareExercise = sentenceString => {
+    const now = Date.now();
+    const { newExercise } = this.props;
+    const sentenceArray = sentenceString.split(' ');
+    this.getSolution({
+      ...newExercise,
+      showSolution: false,
+      showButton: true,
+      response: null,
+      createAt: now,
+      sentence: sentenceArray
+    });
+  };
+
+  /**
+   * set the showSolution flag to true
+   */
+  checkSolution = () => {
+    const {
+      newExercise,
+      saveFreeExerciseDispatch,
+      updateNewExerciseStateDispatch
+    } = this.props;
+
+    const codeSolution = newExercise.userSolution[0].map((word, index) => {
+      if (
+        word.languageIterator.getSolution().length === 0 &&
+        newExercise.response[index].tag.charAt(0) === 'F'
+      ) {
+        return newExercise.response[index].tag;
+      }
+      return word.languageIterator.getCodeSolution();
+    }); // questo è un array di codici che invio al backend
+
+    updateNewExerciseStateDispatch({
+      ...newExercise,
+      showSolution: true
+    });
+    saveFreeExerciseDispatch({
+      ...newExercise,
+      codeSolution: [codeSolution, []],
+      privateExerciseDev: this.privateExerciseDev.current.checked
+    });
+  };
+
+  /**
+   * call the server to analyze the sentence
+   */
+  getSolution = newExercise => {
+    const {
+      initNewExerciseStateDispatch,
+      getAutomaticSolutionDispatch
+    } = this.props;
+    initNewExerciseStateDispatch({
+      ...newExercise,
+      response: null
+    });
+    const { sentenceString } = newExercise;
+    const toSend = sentenceString.replace('.', ' ');
+    getAutomaticSolutionDispatch(toSend);
+  };
+
+  render() {
+    const { changeNewInputSentenceDispatch, newExercise, auth } = this.props;
+    const { user } = auth;
+
+    const {
+      sentence,
+      response,
+      showSolution,
+      createAt,
+      sentenceString,
+      showButton
+    } = newExercise;
+
+    const { language } = user;
+
+    return (
+      <div className="student">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-10">
+            <InputSentence
+              prepareExercise={this.prepareExercise}
+              changeNewInputSentence={changeNewInputSentenceDispatch}
+              sentenceString={sentenceString}
+              language={language}
+              // exLanguage={newExercise.languageSelected}
+            />
+            <ExecutionExercise
+              sentence={sentence} // array di parole
+              response={response}
+              showSolution={showSolution}
+              createAt={createAt}
+              showButton={showButton}
+              language={language}
+              indexSolution={0}
+              // exLanguage={newExercise.language}
+            />
+            {sentence && sentence.length > 0 && (
+              <div className="main-card mb-3 card no-bg-color ">
+                <div className="card-body ">
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="custom-control custom-switch ">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input pointer"
+                          id="chekPublicExericiseDev"
+                          ref={this.privateExerciseDev}
+                          disabled={showSolution}
+                        />
+                        <label
+                          className="custom-control-label pointer"
+                          htmlFor="chekPublicExericiseDev"
+                        >
+                          {' '}
+                          {_translator(
+                            'executionExercise_privateExerciseDev',
+                            language
+                          )}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row justify-content-end ">
+                    <div className="col-12 col-sm-4 py-0 px-0">
+                      <button
+                        type="button"
+                        className="btn btn-success btn-block"
+                        onClick={this.checkSolution}
+                        disabled={showSolution}
+                      >
+                        {_translator('executionExercise_complete', language)}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+const mapStateToProps = store => {
+  return {
+    authError: store.auth.authError,
+    auth: store.auth,
+    token: store.auth.user.token,
+    newExercise: store.exercise.newExercise
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    initializeNewExercise: () => dispatch(initializeNewExercise()),
+    updateNewExerciseStateDispatch: newExercise =>
+      dispatch(updateNewExerciseState(newExercise)),
+    changeNewInputSentenceDispatch: input =>
+      dispatch(changeNewInputSentence(input)),
+    saveFreeExerciseDispatch: newExercise =>
+      dispatch(saveFreeExercise(newExercise)),
+    initNewExerciseStateDispatch: newExercise =>
+      dispatch(initNewExerciseState(newExercise)),
+    getAutomaticSolutionDispatch: sentenceString =>
+      dispatch(getAutomaticSolution(sentenceString))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FreeExsercise);

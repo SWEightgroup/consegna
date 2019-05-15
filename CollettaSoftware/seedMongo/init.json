@@ -1,0 +1,1 @@
+[{"email":"admin@colletta.it", "firstName":"Admin","lastName":"Admin","password":"$2a$10$uSPe9AjPu2dj11Y3GbVwIOwr2xSoPJRtBj9u7d1O328QdI9XXRdI2","role":"ROLE_ADMIN","language":"it","dateOfBirth":{"$date":"2014-01-01T00:00:00.000Z"},"enabled":true,"_class":"it.colletta.model.UserModel"}]

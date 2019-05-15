@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mongo:
+    image: 'mongo'
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGO_INITDB_ROOT_USERNAME=sweightgroup
+      - MONGO_INITDB_ROOT_PASSWORD=sweightgroup2019
+    volumes:
+      - './data/db:/data/db'
+    ports:
+      - '27017:27017'
+    command: mongod --smallfiles
+  seed:
+    build: seedMongo/.
+    links:
+      - mongo
+  freeling-it:
+    image: maga97/freeling
+    entrypoint: analyze -f it.cfg --server -p 50001 --output json
+    ports:
+      - '65021:50001'
+      
