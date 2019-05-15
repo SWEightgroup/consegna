@@ -15,7 +15,7 @@ This software is realeased under MIT license.
 * CPU: Intel X86 family;
 * RAM: at least 2GB of RAM;
 * Disk's space: at least 1GB;
-* Operating system: Windows 10 Pro;
+* Operating system: Windows 10 Pro with Hyper-V installed;
 * Java: Java SE Development Kit 8;
 * Node.js: Node.js 10.15.1;
 * Maven: Maven 3.6.0;
@@ -39,7 +39,6 @@ This software is realeased under MIT license.
 * Operating system: OS X 10.10 Yosemite.
 * Java: OpenJDK 8 / Oracle JDK 8;
 * Node.js: Node.js 10.15.1;
-* Maven: Maven 3.6.0;
 * Maven: Maven 3.6.0;
 * Docker: Docker at least 18.09.6;  
 * Browser: Any browser which supports Javascript, HTML5 and CSS3.
