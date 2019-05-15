@@ -83,6 +83,10 @@
   position: relative !important;
 }
 
+.scroll-area-lg {
+  height: 310px !important;
+}
+
 .scroll-area-xxl {
   height: calc(100vh - 320px);
   overflow-x: hidden;
