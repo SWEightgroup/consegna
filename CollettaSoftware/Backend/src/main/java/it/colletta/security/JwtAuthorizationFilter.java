@@ -39,12 +39,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   /**
    * doFilterInternal.
    * 
-   * @param HttpServletRequest TODO
-   * @param HttpServletResponse TODO
-   * @param FilterChain TODO
-   * @return nothing
-   * @throws IOException TODO
-   * @throws ServletException TODO
    */
   @Override
   protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
@@ -65,8 +59,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   /**
    * getAuthentication.
    * 
-   * @param request TODO
-   * @return UsernamePasswordAuthenticationToken TODO
+   * @param request Request
+   * @return UsernamePasswordAuthenticationToken
    */
   private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
     String token = request.getHeader(HEADER_STRING);

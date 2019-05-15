@@ -39,7 +39,7 @@ public class PhraseService {
    * @param userId the id of the user.
    * @return the list of the phrases without solution.
    */
-  public List<PhraseModel> getAllPhrases(@NonNull String userId) { // TODO che senso ha?
+  public List<PhraseModel> getAllPhrases(@NonNull String userId) {
     return phraseRepository.findAllByAuthor(userId);
   }
 
@@ -134,7 +134,6 @@ public class PhraseService {
       String authorId) {
     return phraseRepository.getSolution(phraseId, solutionId);
   }
-
 
   /**
    * downloadPhrasesWithFilter.
