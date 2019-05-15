@@ -1,6 +1,0 @@
-COMMENT LINE PERCENTAGE 
-
-Total file analyzed: 74
-Total rows: 4412
-Comment rows: 852
-Percentage: 19.31

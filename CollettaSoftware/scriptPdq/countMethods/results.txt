@@ -1,2 +1,0 @@
-analyzed files: 44
-methods average for file: 2.477272727272727
