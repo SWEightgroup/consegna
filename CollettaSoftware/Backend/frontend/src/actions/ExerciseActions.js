@@ -292,9 +292,22 @@ export const getAutomaticSolution = sentenceString => {
         }
       )
       .then(res => {
+        const data = JSON.parse(res.data.solutionText).sentences[0].tokens;
+
+        for (let count = 0; count < data.length; count += 1) {
+          if (data[count].form && data[count].form.indexOf('_') !== -1) {
+            const toSplit = data[count].form.split('_');
+            for (let i = 1; i < toSplit.length; i += 1) {
+              if (i === 1) data[count].form = toSplit[0];
+              const x = { ...data[count] };
+              x.form = toSplit[i];
+              data.splice(count + i, 0, x);
+            }
+          }
+        }
         dispatch(
           updateNewExerciseState({
-            response: JSON.parse(res.data.solutionText).sentences[0].tokens,
+            response: data,
             language: store.getState().exercise.newExercise.languageSelected
             // .filter(token => token.tag.charAt(0) !== 'F')
           })
